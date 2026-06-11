@@ -156,6 +156,20 @@ terms).
   request schema) → guardrail engine (compiled thesis rules, deterministic)
   → staging (research session) → trigger monitor → one-tap confirm →
   Alpaca MCP execution → audit log.
+- **Trigger monitor — pure server-side (decided):** staged trades are never
+  parked as native resting orders at Alpaca, because a broker-held stop/limit
+  executes on its own and would bypass one-tap confirm. Instead, the backend
+  subscribes to Alpaca's real-time streams and evaluates every staged trade's
+  conditions continuously — including conditions no broker order type can
+  express (sloped trendlines from chart drawings, multi-condition setups,
+  volume/indicator/news triggers). On trigger: alert → user one-tap confirms
+  → order submitted as a **limit order at the staged price**, so
+  confirm-latency slippage results in no fill rather than a bad fill. This
+  makes the monitor real-time infrastructure we own (uptime/latency SLOs);
+  paper-trading v1 lets us harden it with nothing real at stake. Native
+  resting orders may return later as an explicit per-trade "skip confirm"
+  opt-in, which is the same legal question as auto-execution and is parked
+  with it (v3).
 - **Session model:** research sessions are durable documents with sources
   (news, PDFs, imported knowledge, past trading sessions) and staged trades.
   Trading sessions are daily, ephemeral-context views that link research
@@ -180,10 +194,6 @@ terms).
 
 ## 8. Open questions
 
-- Trigger-monitor infrastructure: server-side condition evaluation against
-  Alpaca streams vs. native Alpaca stop/limit orders where expressible —
-  likely a hybrid (use native order types when the condition maps cleanly;
-  server-side monitor for drawn-level/multi-condition setups).
 - Free-tier boundaries: what (if anything) is gated when subscriptions arrive
   in v1.x (candidates: number of research sessions, news latency, history
   depth).
