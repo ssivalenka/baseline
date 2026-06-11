@@ -61,7 +61,7 @@ Panels / capabilities:
 converts them **immediately into concrete, fully-specified orders** — the
 output of the prompt box is a structured trade object that plugs directly
 into the Alpaca API request schema (symbol, side, qty, type, limit/stop
-prices, time-in-force, option legs). The user reviews/edits the concrete
+prices, time-in-force, option contract). The user reviews/edits the concrete
 order; it is then **staged** to the research session.
 
 Staged trades **persist until filled, expired, or cancelled** — they live
@@ -103,6 +103,7 @@ pipeline across research sessions.
 | Decision | Choice |
 |---|---|
 | Asset classes | US equities + options (Alpaca). Crypto/futures deferred. |
+| Order scope | **Shares:** buy / sell. **Options (single-leg only):** buy-to-open, sell-to-close, sell-to-open, buy-to-close. No multi-leg strategies in v1 — the prompt-box grammar, guardrail engine, and staging UI all assume one instrument per order. |
 | Paper vs live | Paper trading first; live behind a waitlist. Alpaca paper API is identical to live, so one build. |
 | Platform | Desktop web. Mobile confirm-companion app is a fast-follow candidate (entry triggers fire when users are away from desk). |
 | Brokerage model | **Users bring their own Alpaca account** (OAuth). App is a pure software layer — lightest compliance. Alpaca Broker API onboarding deferred. |
@@ -175,8 +176,6 @@ terms).
   Alpaca streams vs. native Alpaca stop/limit orders where expressible —
   likely a hybrid (use native order types when the condition maps cleanly;
   server-side monitor for drawn-level/multi-condition setups).
-- Options UX depth in v1: single-leg only, or multi-leg strategies (verticals,
-  iron condors) in the prompt-box grammar?
 - How thesis rule conflicts are resolved when multiple research sessions are
   linked to one trading session.
 - Subscription price point and what (if anything) is free-tier.
