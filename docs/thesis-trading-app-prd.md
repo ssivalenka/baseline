@@ -41,6 +41,13 @@ are explicitly deferred.
 - Overrides are logged and surfaced in the portfolio console (thesis-drift
   reporting). Keeping the user as the final decision-maker is also a
   deliberate regulatory posture (self-directed, not advisory).
+- **Rule conflict resolution:** when rules conflict for a given order (e.g.,
+  multiple linked research sessions imply contradictory constraints, or the
+  thesis is ambiguous for the trade at hand), the app does not guess — it
+  guides the user through a short set of **multiple-choice questions** framed
+  in the context of the current trade to capture their intent. The resolution
+  is logged with the order and can optionally be promoted into the compiled
+  rule set so the same conflict doesn't re-prompt.
 
 ### 3.3 Research sessions (durable)
 
@@ -108,7 +115,7 @@ pipeline across research sessions.
 | Platform | Desktop web. Mobile confirm-companion app is a fast-follow candidate (entry triggers fire when users are away from desk). |
 | Brokerage model | **Users bring their own Alpaca account** (OAuth). App is a pure software layer — lightest compliance. Alpaca Broker API onboarding deferred. |
 | Household finance (savings/checking/retirement/529) | **Deferred past v1.** Roadmap: read-only aggregation (Plaid/MX) → money movement → possibly BaaS custody. |
-| Monetization | Subscription. Alpaca's own charges pass through to the user since they bring their own account. Premium data tiers (e.g., low-latency news) are a future upsell. |
+| Monetization | **Free tier first; subscriptions parked** until the free tier is implemented and proven. Alpaca's own charges pass through to the user since they bring their own account. Subscription + premium data tiers (e.g., low-latency news) come after. |
 
 ## 5. Data & news integrations
 
@@ -161,9 +168,10 @@ terms).
 
 - **v1:** Desktop web, paper trading, BYO Alpaca account, equities + options,
   thesis guardrails, research/trading sessions, Alpaca News + EDGAR +
-  Finnhub, subscription billing.
-- **v1.x:** Live trading off the waitlist; mobile companion for alerts +
-  one-tap confirms; Benzinga Pro premium tier.
+  Finnhub. **Free tier only.**
+- **v1.x:** Live trading off the waitlist; subscription billing on top of the
+  proven free tier; mobile companion for alerts + one-tap confirms; Benzinga
+  Pro premium tier.
 - **v2:** Read-only household aggregation (Plaid/MX) feeding the portfolio
   console; crypto (requires rethinking daily-reset semantics for 24/7
   markets); theme-level research templates.
@@ -176,6 +184,6 @@ terms).
   Alpaca streams vs. native Alpaca stop/limit orders where expressible —
   likely a hybrid (use native order types when the condition maps cleanly;
   server-side monitor for drawn-level/multi-condition setups).
-- How thesis rule conflicts are resolved when multiple research sessions are
-  linked to one trading session.
-- Subscription price point and what (if anything) is free-tier.
+- Free-tier boundaries: what (if anything) is gated when subscriptions arrive
+  in v1.x (candidates: number of research sessions, news latency, history
+  depth).
